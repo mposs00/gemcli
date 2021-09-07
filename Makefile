@@ -6,9 +6,9 @@ EXE := $(BIN_DIR)/gemcli
 SRC := $(wildcard $(SRC_DIR)/*.c)
 OBJ := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
 
-CPPFLAGS := -Iinclude -MMD -MP -I/usr/local/opt/openssl@1.1/include
-LDFLAGS := -L/usr/local/opt/openssl@1.1/lib
-CFLAGS := -Wall
+CPPFLAGS := -Iinclude -MMD -MP -I/usr/local/opt/openssl/include
+LDFLAGS := -L/usr/local/opt/openssl/lib -lcrypto -lssl
+CFLAGS := -Wall -g
 
 all: $(EXE)
 

@@ -1,11 +1,15 @@
-#include <openssl/conf.h>
 #include <stdio.h>
 
-void init_ssl() {
-    
-}
+#include "net.h"
+#include "ssl.h"
 
 int main() {
-    printf("Hello, world!\n");
+    URL url = parse_url("gemini.circumlunar.space/software");
+    sanitize_url(&url);
+    printf("URL: %s\nProtocol: %s\nHostname: %s\nPort: %d\nPath: %s\n", url.url, url.proto, url.hostname, url.port, url.path);
+
+    init_openssl();
+    ssl_connect(url);
+
     return 0;
 }
