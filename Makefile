@@ -24,7 +24,7 @@ $(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@
 
 clean:
-	@$(RM) -rv $(BIN_DIR) $(OBJ_DIR)
+	@$(RM) -rv $(OBJ_DIR)
 
 .PHONY: clean
 
