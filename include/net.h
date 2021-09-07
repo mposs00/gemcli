@@ -26,5 +26,6 @@ URL parse_url(char* remote_url);
 void unparse_url(URL url, char* buf, int buflen);
 void sanitize_url(URL* url);
 int create_socket(BIO* bio_stdout, URL url);
+int request_raw(URL url, char** out_buffer);
 
 #endif

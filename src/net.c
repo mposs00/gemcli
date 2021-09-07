@@ -1,4 +1,5 @@
 #include "net.h"
+#include "ssl.h"
 
 URL parse_url(char* remote_url) {
     URL url;
@@ -112,8 +113,34 @@ int create_socket(BIO* bio_stdout, URL url) {
 
     char* ip_addr = inet_ntoa(dest.sin_addr);
     if (connect(remote_socket, (struct sockaddr*) &dest, sizeof(struct sockaddr)) == -1) {
-        BIO_printf("Cannot connect to host %s [%s} on port %d.\n", url.hostname, ip_addr, url.port);
+        BIO_printf(bio_stdout, "Cannot connect to host %s [%s} on port %d.\n", url.hostname, ip_addr, url.port);
     }
 
     return remote_socket;
+}
+
+int request_raw(URL url, char** out_buffer) {
+    int total_len = 0;
+    int recv_buf_len = 2048;
+    char recv_buf[recv_buf_len];
+    int size = 1;
+
+    *out_buffer = NULL;
+
+    char request[2048];
+    snprintf(request, 2048, "%s\r\n", url.url);
+    int sent = send_data(request, strlen(request));
+    if (sent) {
+        while (size > 0) {
+            size = read_data(recv_buf, recv_buf_len);
+            if (!*out_buffer)
+                *out_buffer = malloc(size);
+            else
+                *out_buffer = realloc(*out_buffer, total_len + size);
+            memcpy(*out_buffer + total_len, recv_buf, size);
+            total_len += size;
+        }
+        return total_len;
+    }
+    else return 0;
 }

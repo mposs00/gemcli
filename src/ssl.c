@@ -50,3 +50,16 @@ void ssl_connect(URL url) {
     X509_NAME_print_ex(bio_stdout, certname, 0, 0);
     BIO_printf(bio_stdout, "\n");
 }
+
+int send_data(char* data, int data_len) {
+    if (SSL_write(ssl, data, data_len) < 0)
+        return 0;
+    return 1;
+}
+
+int read_data(char* buffer, int buffer_len) {
+    int size = SSL_read(ssl, buffer, buffer_len);
+    if (size < 0)
+        printf("recv error %d\n", size);
+    return size;
+}
