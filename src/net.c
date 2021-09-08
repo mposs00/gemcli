@@ -113,7 +113,7 @@ int create_socket(BIO* bio_stdout, URL url) {
 
     char* ip_addr = inet_ntoa(dest.sin_addr);
     if (connect(remote_socket, (struct sockaddr*) &dest, sizeof(struct sockaddr)) == -1) {
-        BIO_printf(bio_stdout, "Cannot connect to host %s [%s} on port %d.\n", url.hostname, ip_addr, url.port);
+        BIO_printf(bio_stdout, "Cannot connect to host %s [%s] on port %d.\n", url.hostname, ip_addr, url.port);
     }
 
     return remote_socket;
@@ -130,6 +130,7 @@ int request_raw(URL url, char** out_buffer) {
     char request[2048];
     snprintf(request, 2048, "%s\r\n", url.url);
     int sent = send_data(request, strlen(request));
+    printf("Sent request: %s\n", request);
     if (sent) {
         while (size > 0) {
             size = read_data(recv_buf, recv_buf_len);

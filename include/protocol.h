@@ -4,6 +4,7 @@
 #include "net.h"
 
 typedef enum {
+    NO_RESPONSE = 0,
     INPUT = 10,
     SENSITIVE_INPUT = 11,
     SUCCESS = 20,
@@ -27,7 +28,7 @@ typedef enum {
 typedef struct {
     URL url;
     response_code code;
-    char status_meta[1024];
+    char status_meta[1028];
     char* body;
     int body_len;
 } gemini_response;

@@ -1,6 +1,13 @@
 #include "gemtext.h"
 
 gemtext_page parse_gemtext(gemini_response gresp) {
+    if (gresp.code == NO_RESPONSE || gresp.body_len == 0) {
+        gemtext_page empty_page;
+        empty_page.num_links = 0;
+        empty_page.num_displayed_lines = 0;
+        return empty_page;
+    }
+
     char* nullterm = malloc(gresp.body_len + 1);
     memcpy(nullterm, gresp.body, gresp.body_len);
     nullterm[gresp.body_len] = '\0';
@@ -91,14 +98,13 @@ gemtext_link parse_link(char* line, int index, URL page_url) {
     URL ref = parse_url(str_ref);
     if (!*ref.proto) {
         memcpy(&ref, &page_url, sizeof(URL));
-        strncpy(ref.path, str_ref, 2048);
-        sanitize_url(&ref);
+        strncat(ref.path, str_ref, 2048);
     }
 
+    sanitize_url(&ref);
     link.ref = ref;
     char* link_text = strtok(NULL, "");
-    link.text = malloc(strlen(link_text) + 1);
-    strcpy(link.text, link_text);
+    strncpy(link.text, link_text, 2048);
     link.index = index;
 
     return link;

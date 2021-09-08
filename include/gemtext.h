@@ -7,7 +7,7 @@
 
 typedef struct {
     int index;
-    char* text;
+    char text[2048];
     URL ref;
 } gemtext_link;
 

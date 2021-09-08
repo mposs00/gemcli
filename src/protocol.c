@@ -1,5 +1,7 @@
 #include "protocol.h"
 #include "net.h"
+#include "ssl.h"
+#include <unistd.h>
 
 gemini_response parse_response(char* response, int response_len) {
     gemini_response parsed;
@@ -32,12 +34,21 @@ gemini_response parse_response(char* response, int response_len) {
 }
 
 gemini_response request(URL url) {
+    ssl_connect(url);
     char* response;
+    gemini_response resp;
     int response_len = request_raw(url, &response);
 
-    gemini_response resp = parse_response(response, response_len);
+    if (response_len)
+        resp = parse_response(response, response_len);
+    else {
+        resp.body_len = 0;
+        resp.code = NO_RESPONSE;
+    }
     resp.url = url;
 
+    ssl_cleanup();
+    close(remote_socket);
     free(response);
     return resp;
 }

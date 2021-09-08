@@ -24,5 +24,6 @@ void init_openssl();
 void ssl_connect(URL url);
 int read_data(char* buffer, int buffer_len);
 int send_data(char* data, int data_len);
+void ssl_cleanup();
 
 #endif
